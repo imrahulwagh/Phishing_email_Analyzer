@@ -1,0 +1,45 @@
+Content-Type: multipart/related;
+ boundary="===============5546612306335622749=="
+MIME-Version: 1.0
+From: PayPal Security <security-update@paypa1-verify.com>
+To: user@victim.com
+Reply-To: hacker-collect@evil-attacker.net
+Return-Path: bounce@different-domain.org
+Subject: URGENT: Your PayPal Account Has Been Suspended
+Date: Mon, 07 Sep 2026 11:30:00 +0000
+Authentication-Results: mx.google.com; spf=fail; dkim=fail; dmarc=fail
+Received-SPF: fail (google.com: domain of paypa1-verify.com does not designate
+ permitted sender)
+
+--===============5546612306335622749==
+Content-Type: text/html; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+
+<!DOCTYPE html>
+<html>
+<body>
+    <img src="cid:paypal_logo" alt="PayPal Logo" width="200" height="80" />
+    <h2 style="color:red;">ACCOUNT SUSPENDED IMMEDIATELY</h2>
+    <p>Dear Customer,</p>
+    <p>Unauthorized login attempts were detected on your account. <b>Immediate action required</b> within 24 hours to prevent permanent account termination.</p>
+    <p>Please click below to verify your account credentials immediately:</p>
+    <p><a href="http://evil-phish.net/login-harvest">https://www.paypal.com/cgi-bin/webscr-verify</a></p>
+    <p>Thank you,<br>PayPal Security Department</p>
+</body>
+</html>
+--===============5546612306335622749==
+Content-Type: image/png
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-ID: <paypal_logo>
+Content-Disposition: inline; filename="paypal_logo.png"
+
+iVBORw0KGgoAAAANSUhEUgAAAMgAAABQCAIAAADTD63nAAABCElEQVR4nO3bwQ3CQBAEwTUiIVIz
+cTg1ExI8CAG3LIuqAPY+rfndMus+cLTb4RdBWFQsFglhkRAWCWGREBYJYZEQFglhkRAWCWGREBYJ
+YZEQFglhkRAWCWGREBaJ+2Te22NOsjxfZz3Nl8UiISwSwiIhLBLCIiEsEsIiISwSwiIhLBLCIiEs
+EsIiISwSwiIhLBLCIiEsEsIiISyu9pniRz5EXJrFIiEsEsIiISwSwiIhLBLCIiEsEsIiISwSwiIh
+LBLCIiEsEsIiISwSwiIhLBLCIrHMujeX+WsWi4SwSAiLhLBICIuEsEgIi4SwSAiLhLBICIuEsEgI
+i4SwSAiLhLBICIuEsJjCB2oFB2bC80qLAAAAAElFTkSuQmCC
+
+--===============5546612306335622749==--

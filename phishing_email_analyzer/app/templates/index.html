@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Phishing Email Analyzer | Security Dashboard</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col">
+
+    <!-- Navbar -->
+    <header class="bg-white border-b border-slate-200 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <div class="bg-indigo-600 text-white p-2 rounded-lg shadow-sm">
+                    <i data-lucide="shield-check" class="w-6 h-6"></i>
+                </div>
+                <div>
+                    <h1 class="text-lg font-bold text-slate-900 leading-tight">PhishGuard Analyzer</h1>
+                    <p class="text-xs text-slate-500">MSTICPy • VirusTotal API • Perceptual Hash • NLP ML</p>
+                </div>
+            </div>
+            <div class="flex items-center space-x-4">
+                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-emerald-100 text-emerald-800">
+                    <span class="w-1.5 h-1.5 mr-1.5 bg-emerald-500 rounded-full"></span> Threat Intel Ready
+                </span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-1 w-full grid grid-cols-1 lg:grid-cols-12 gap-8">
+        
+        <!-- Left Sidebar / Controls & Upload -->
+        <div class="lg:col-span-4 space-y-6">
+            
+            <!-- File Upload Card -->
+            <div class="bg-white rounded-xl border border-slate-200 p-6 shadow-sm">
+                <h2 class="text-sm font-semibold text-slate-900 uppercase tracking-wider mb-4 flex items-center">
+                    <i data-lucide="upload-cloud" class="w-4 h-4 mr-2 text-indigo-600"></i> Analyze .EML File
+                </h2>
+                
+                <div id="dropzone" class="border-2 border-dashed border-slate-300 rounded-lg p-6 text-center hover:border-indigo-500 transition-colors cursor-pointer bg-slate-50 hover:bg-indigo-50/30">
+                    <input type="file" id="fileInput" accept=".eml" class="hidden">
+                    <i data-lucide="file-text" class="w-10 h-10 text-slate-400 mx-auto mb-2"></i>
+                    <p class="text-sm font-medium text-slate-700">Click or Drag & Drop .eml email file</p>
+                    <p class="text-xs text-slate-500 mt-1">Supports MIME headers, images & HTML body</p>
+                </div>
+
+                <div id="fileInfo" class="hidden mt-4 p-3 bg-slate-100 rounded-lg text-xs flex justify-between items-center text-slate-700">
+                    <span id="selectedFileName" class="font-medium truncate max-w-[200px]">email.eml</span>
+                    <button id="clearFileBtn" class="text-slate-500 hover:text-red-600"><i data-lucide="x" class="w-4 h-4"></i></button>
+                </div>
+
+                <button id="analyzeBtn" class="w-full mt-4 bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2.5 px-4 rounded-lg shadow-sm transition-all flex items-center justify-center space-x-2">
+                    <i data-lucide="search" class="w-4 h-4"></i>
+                    <span>Run Security Analysis</span>
+                </button>
+            </div>
+
+            <!-- Configuration & Threshold Card -->
+            <div class="bg-white rounded-xl border border-slate-200 p-6 shadow-sm space-y-4">
+                <h3 class="text-sm font-semibold text-slate-900 uppercase tracking-wider flex items-center">
+                    <i data-lucide="sliders" class="w-4 h-4 mr-2 text-indigo-600"></i> Scoring Configuration
+                </h3>
+
+                <div>
+                    <label class="text-xs font-medium text-slate-600 flex justify-between">
+                        <span>Risk Threshold</span>
+                        <span id="thresholdVal" class="font-bold text-indigo-600">0.65</span>
+                    </label>
+                    <input type="range" id="thresholdInput" min="0.1" max="0.9" step="0.05" value="0.65" class="w-full h-1.5 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-indigo-600 mt-2">
+                </div>
+
+                <div class="pt-2 border-t border-slate-100 space-y-3">
+                    <p class="text-xs font-medium text-slate-500">Module Scoring Weights</p>
+                    <div>
+                        <span class="text-xs text-slate-600 flex justify-between"><span>Header Weight</span><span>0.35</span></span>
+                        <div class="w-full bg-slate-100 h-1.5 rounded-full overflow-hidden mt-1"><div class="bg-indigo-500 h-full" style="width: 35%"></div></div>
+                    </div>
+                    <div>
+                        <span class="text-xs text-slate-600 flex justify-between"><span>Image/Logo Weight</span><span>0.25</span></span>
+                        <div class="w-full bg-slate-100 h-1.5 rounded-full overflow-hidden mt-1"><div class="bg-sky-500 h-full" style="width: 25%"></div></div>
+                    </div>
+                    <div>
+                        <span class="text-xs text-slate-600 flex justify-between"><span>Content/NLP Weight</span><span>0.40</span></span>
+                        <div class="w-full bg-slate-100 h-1.5 rounded-full overflow-hidden mt-1"><div class="bg-emerald-500 h-full" style="width: 40%"></div></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Content / Results Dashboard -->
+        <div class="lg:col-span-8 space-y-6">
+            
+            <!-- Empty State Placeholder -->
+            <div id="emptyState" class="bg-white rounded-xl border border-slate-200 p-12 text-center shadow-sm">
+                <div class="w-16 h-16 bg-indigo-50 text-indigo-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i data-lucide="mail-search" class="w-8 h-8"></i>
+                </div>
+                <h3 class="text-base font-semibold text-slate-900">No Email Loaded</h3>
+                <p class="text-sm text-slate-500 max-w-md mx-auto mt-1">
+                    Upload an <code>.eml</code> file on the left panel to execute MSTICPy header parsing, VirusTotal domain threat intel lookups, perceptual logo hashing, and NLP ML risk analysis.
+                </p>
+            </div>
+
+            <!-- Results View (Hidden by default) -->
+            <div id="resultsView" class="hidden space-y-6">
+                
+                <!-- Main Verdict Banner -->
+                <div id="verdictCard" class="bg-white rounded-xl border p-6 shadow-sm flex flex-col md:flex-row items-start justify-between gap-6">
+                    <div class="flex items-start space-x-4 flex-1">
+                        <div id="verdictIconContainer" class="p-4 rounded-xl text-white shrink-0 mt-1">
+                            <i id="verdictIcon" data-lucide="shield-alert" class="w-8 h-8"></i>
+                        </div>
+                        <div class="space-y-1">
+                            <div class="flex items-center space-x-2">
+                                <span id="verdictBadge" class="inline-block text-xs uppercase font-bold tracking-wider px-2.5 py-1 rounded-full">HIGH RISK PHISHING</span>
+                                <span id="confidenceBadge" class="inline-block text-xs font-semibold px-2.5 py-1 rounded-full bg-slate-100 text-slate-700">Confidence: 95%</span>
+                            </div>
+                            <h2 id="emailSubject" class="text-lg font-bold text-slate-900 leading-tight">Subject Line</h2>
+                            <p id="emailSender" class="text-xs text-slate-500">From: sender@example.com</p>
+                            
+                            <!-- Explanation Box -->
+                            <div class="mt-3 p-3 bg-slate-50 border border-slate-200 rounded-lg text-xs text-slate-700 leading-relaxed">
+                                <span class="font-semibold text-slate-900 block mb-0.5">Summary Explanation:</span>
+                                <span id="explanationText">Analysis summary explanation...</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Risk Gauge Ring -->
+                    <div class="text-center bg-slate-50 px-6 py-4 rounded-xl border border-slate-100 shrink-0">
+                        <span class="text-xs font-semibold text-slate-500 uppercase tracking-wider block">Risk Score</span>
+                        <span id="riskScoreVal" class="text-3xl font-extrabold text-slate-900">0.88</span>
+                        <span class="text-xs text-slate-400 block">/ 1.00</span>
+                    </div>
+                </div>
+
+                <!-- 4 Module Breakdown Cards Grid -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    
+                    <!-- MSTICPy & Header Module Card -->
+                    <div class="bg-white rounded-xl border border-slate-200 p-5 shadow-sm space-y-3">
+                        <div class="flex justify-between items-center border-b border-slate-100 pb-2">
+                            <span class="text-xs font-bold uppercase text-slate-500 tracking-wider flex items-center">
+                                <i data-lucide="cpu" class="w-4 h-4 mr-1.5 text-indigo-600"></i> MSTICPy Header Prediction
+                            </span>
+                            <span id="msticpyScoreBadge" class="text-xs font-bold px-2 py-0.5 rounded bg-indigo-50 text-indigo-700">0.75</span>
+                        </div>
+                        <div class="space-y-2 text-xs">
+                            <div class="flex justify-between"><span class="text-slate-500">SPF Status:</span><span id="spfStatus" class="font-semibold">PASS</span></div>
+                            <div class="flex justify-between"><span class="text-slate-500">DKIM Status:</span><span id="dkimStatus" class="font-semibold">PASS</span></div>
+                            <div class="flex justify-between"><span class="text-slate-500">DMARC Status:</span><span id="dmarcStatus" class="font-semibold">PASS</span></div>
+                            <div class="flex justify-between"><span class="text-slate-500">Domain Mismatch:</span><span id="domainMismatch" class="font-semibold">No</span></div>
+                            <div class="flex justify-between"><span class="text-slate-500">Received Hops:</span><span id="receivedHops" class="font-semibold">2</span></div>
+                        </div>
+                    </div>
+
+                    <!-- VirusTotal Threat Intel Card -->
+                    <div class="bg-white rounded-xl border border-slate-200 p-5 shadow-sm space-y-3">
+                        <div class="flex justify-between items-center border-b border-slate-100 pb-2">
+                            <span class="text-xs font-bold uppercase text-slate-500 tracking-wider flex items-center">
+                                <i data-lucide="globe" class="w-4 h-4 mr-1.5 text-sky-600"></i> VirusTotal Domain Intel
+                            </span>
+                            <span id="vtBadge" class="text-xs font-bold px-2 py-0.5 rounded bg-sky-50 text-sky-700">Clean</span>
+                        </div>
+                        <div class="space-y-2 text-xs">
+                            <div class="flex justify-between"><span class="text-slate-500">Sender Domain:</span><span id="vtDomain" class="font-semibold truncate max-w-[140px]">example.com</span></div>
+                            <div class="flex justify-between"><span class="text-slate-500">VT Malicious Detections:</span><span id="vtMaliciousCount" class="font-semibold text-red-600">0</span></div>
+                            <div class="flex justify-between"><span class="text-slate-500">VT Harmless Engines:</span><span id="vtHarmlessCount" class="font-semibold text-emerald-600">80</span></div>
+                            <div class="flex justify-between"><span class="text-slate-500">VT Domain Reputation:</span><span id="vtReputation" class="font-semibold">0</span></div>
+                        </div>
+                    </div>
+
+                    <!-- Image / Logo Module Card -->
+                    <div class="bg-white rounded-xl border border-slate-200 p-5 shadow-sm space-y-3">
+                        <div class="flex justify-between items-center border-b border-slate-100 pb-2">
+                            <span class="text-xs font-bold uppercase text-slate-500 tracking-wider flex items-center">
+                                <i data-lucide="image" class="w-4 h-4 mr-1.5 text-amber-600"></i> Perceptual Logo Hashing
+                            </span>
+                            <span id="imageScoreBadge" class="text-xs font-bold px-2 py-0.5 rounded bg-slate-100 text-slate-700">0.85</span>
+                        </div>
+                        <div class="space-y-2 text-xs">
+                            <div class="flex justify-between"><span class="text-slate-500">Extracted Images:</span><span id="extractedImgCount" class="font-semibold">2</span></div>
+                            <div class="flex justify-between"><span class="text-slate-500">Brand Impersonation:</span><span id="logoImpersonation" class="font-semibold text-red-600">Yes</span></div>
+                            <div class="flex justify-between"><span class="text-slate-500">Brand Match:</span><span id="brandNameMatched" class="font-semibold">PayPal</span></div>
+                        </div>
+                    </div>
+
+                    <!-- Content / NLP Module Card -->
+                    <div class="bg-white rounded-xl border border-slate-200 p-5 shadow-sm space-y-3">
+                        <div class="flex justify-between items-center border-b border-slate-100 pb-2">
+                            <span class="text-xs font-bold uppercase text-slate-500 tracking-wider flex items-center">
+                                <i data-lucide="file-text" class="w-4 h-4 mr-1.5 text-emerald-600"></i> Content / NLP ML
+                            </span>
+                            <span id="contentScoreBadge" class="text-xs font-bold px-2 py-0.5 rounded bg-slate-100 text-slate-700">0.72</span>
+                        </div>
+                        <div class="space-y-2 text-xs">
+                            <div class="flex justify-between"><span class="text-slate-500">ML Phish Prob:</span><span id="mlProb" class="font-semibold">75%</span></div>
+                            <div class="flex justify-between"><span class="text-slate-500">Urgency Score:</span><span id="urgencyScore" class="font-semibold">0.60</span></div>
+                            <div class="flex justify-between"><span class="text-slate-500">Link Mismatches:</span><span id="linkMismatchCount" class="font-semibold text-amber-600">1</span></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Contributing Security Signals Detail Box -->
+                <div class="bg-white rounded-xl border border-slate-200 p-6 shadow-sm">
+                    <h3 class="text-sm font-semibold text-slate-900 uppercase tracking-wider mb-4 flex items-center">
+                        <i data-lucide="alert-triangle" class="w-4 h-4 mr-2 text-amber-500"></i> Detected Risk Signals & Threat Flags
+                    </h3>
+                    <ul id="signalsList" class="space-y-2.5 text-xs text-slate-700">
+                        <!-- Populated by JS -->
+                    </ul>
+                </div>
+
+                <!-- Raw JSON View Accordion -->
+                <div class="bg-white rounded-xl border border-slate-200 p-6 shadow-sm">
+                    <div class="flex justify-between items-center cursor-pointer" id="jsonToggleHeader">
+                        <h3 class="text-sm font-semibold text-slate-900 uppercase tracking-wider flex items-center">
+                            <i data-lucide="code" class="w-4 h-4 mr-2 text-indigo-600"></i> Full Analysis JSON Payload
+                        </h3>
+                        <i data-lucide="chevron-down" class="w-4 h-4 text-slate-400"></i>
+                    </div>
+                    <pre id="jsonViewer" class="hidden mt-4 p-4 bg-slate-900 text-slate-100 rounded-lg text-xs overflow-x-auto font-mono max-h-96"></pre>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-white border-t border-slate-200 py-4 text-center text-xs text-slate-500">
+        Phishing Email Analyzer • MSTICPy & VirusTotal API Integrated • Modern Light Theme
+    </footer>
+
+    <!-- Frontend Script -->
+    <script>
+        lucide.createIcons();
+
+        const dropzone = document.getElementById('dropzone');
+        const fileInput = document.getElementById('fileInput');
+        const fileInfo = document.getElementById('fileInfo');
+        const selectedFileName = document.getElementById('selectedFileName');
+        const clearFileBtn = document.getElementById('clearFileBtn');
+        const analyzeBtn = document.getElementById('analyzeBtn');
+        const thresholdInput = document.getElementById('thresholdInput');
+        const thresholdVal = document.getElementById('thresholdVal');
+        
+        const emptyState = document.getElementById('emptyState');
+        const resultsView = document.getElementById('resultsView');
+
+        let selectedFile = null;
+
+        thresholdInput.addEventListener('input', (e) => {
+            thresholdVal.textContent = e.target.value;
+        });
+
+        dropzone.addEventListener('click', () => fileInput.click());
+
+        dropzone.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            dropzone.classList.add('border-indigo-500', 'bg-indigo-50/50');
+        });
+
+        dropzone.addEventListener('dragleave', () => {
+            dropzone.classList.remove('border-indigo-500', 'bg-indigo-50/50');
+        });
+
+        dropzone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            dropzone.classList.remove('border-indigo-500', 'bg-indigo-50/50');
+            if (e.dataTransfer.files.length > 0) {
+                handleFile(e.dataTransfer.files[0]);
+            }
+        });
+
+        fileInput.addEventListener('change', (e) => {
+            if (e.target.files.length > 0) {
+                handleFile(e.target.files[0]);
+            }
+        });
+
+        function handleFile(file) {
+            if (!file.name.endsWith('.eml')) {
+                alert('Please select a valid .eml file.');
+                return;
+            }
+            selectedFile = file;
+            selectedFileName.textContent = file.name;
+            fileInfo.classList.remove('hidden');
+        }
+
+        clearFileBtn.addEventListener('click', () => {
+            selectedFile = null;
+            fileInput.value = '';
+            fileInfo.classList.add('hidden');
+        });
+
+        analyzeBtn.addEventListener('click', async () => {
+            if (!selectedFile) {
+                alert('Please upload an .eml file to analyze.');
+                return;
+            }
+
+            analyzeBtn.disabled = true;
+            analyzeBtn.innerHTML = `<span class="animate-spin mr-2">⏳</span> Querying Threat Intel & Analyzing...`;
+
+            const formData = new FormData();
+            formData.append('file', selectedFile);
+            formData.append('threshold', thresholdInput.value);
+
+            try {
+                const response = await fetch('/api/analyze', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                if (!response.ok) {
+                    const err = await response.json();
+                    throw new Error(err.detail || 'Analysis failed');
+                }
+
+                const data = await response.json();
+                renderResults(data);
+            } catch (err) {
+                alert(`Error: ${err.message}`);
+            } finally {
+                analyzeBtn.disabled = false;
+                analyzeBtn.innerHTML = `<i data-lucide="search" class="w-4 h-4 mr-2"></i> Run Security Analysis`;
+                lucide.createIcons();
+            }
+        });
+
+        function renderResults(data) {
+            emptyState.classList.add('hidden');
+            resultsView.classList.remove('hidden');
+
+            const analysis = data.analysis;
+            
+            document.getElementById('emailSubject').textContent = data.subject || '(No Subject)';
+            document.getElementById('emailSender').textContent = `From: ${data.sender}`;
+            document.getElementById('riskScoreVal').textContent = analysis.overall_risk_score.toFixed(2);
+            document.getElementById('confidenceBadge').textContent = `Confidence: ${(analysis.confidence_score * 100).toFixed(0)}%`;
+            document.getElementById('explanationText').textContent = analysis.explanation;
+
+            const verdictCard = document.getElementById('verdictCard');
+            const verdictBadge = document.getElementById('verdictBadge');
+            const verdictIconContainer = document.getElementById('verdictIconContainer');
+
+            if (analysis.verdict === 'HIGH_RISK_PHISHING') {
+                verdictCard.className = 'bg-white rounded-xl border border-red-300 p-6 shadow-sm flex flex-col md:flex-row items-start justify-between gap-6';
+                verdictBadge.className = 'inline-block text-xs uppercase font-bold tracking-wider px-2.5 py-1 rounded-full bg-red-100 text-red-800';
+                verdictBadge.textContent = '🚨 HIGH RISK PHISHING';
+                verdictIconContainer.className = 'p-4 rounded-xl text-white bg-red-600 shrink-0 mt-1';
+            } else if (analysis.verdict === 'SUSPICIOUS') {
+                verdictCard.className = 'bg-white rounded-xl border border-amber-300 p-6 shadow-sm flex flex-col md:flex-row items-start justify-between gap-6';
+                verdictBadge.className = 'inline-block text-xs uppercase font-bold tracking-wider px-2.5 py-1 rounded-full bg-amber-100 text-amber-800';
+                verdictBadge.textContent = '⚠️ SUSPICIOUS EMAIL';
+                verdictIconContainer.className = 'p-4 rounded-xl text-white bg-amber-500 shrink-0 mt-1';
+            } else {
+                verdictCard.className = 'bg-white rounded-xl border border-emerald-300 p-6 shadow-sm flex flex-col md:flex-row items-start justify-between gap-6';
+                verdictBadge.className = 'inline-block text-xs uppercase font-bold tracking-wider px-2.5 py-1 rounded-full bg-emerald-100 text-emerald-800';
+                verdictBadge.textContent = '✅ LEGITIMATE EMAIL';
+                verdictIconContainer.className = 'p-4 rounded-xl text-white bg-emerald-600 shrink-0 mt-1';
+            }
+
+            // MSTICPy & Header details
+            document.getElementById('msticpyScoreBadge').textContent = analysis.msticpy_analysis.header_score.toFixed(2);
+            document.getElementById('spfStatus').textContent = analysis.header_details.spf_status;
+            document.getElementById('dkimStatus').textContent = analysis.header_details.dkim_status;
+            document.getElementById('dmarcStatus').textContent = analysis.header_details.dmarc_status;
+            document.getElementById('domainMismatch').textContent = analysis.header_details.domain_mismatch ? 'YES' : 'No';
+            document.getElementById('receivedHops').textContent = analysis.msticpy_analysis.metadata.received_hops_count || 0;
+
+            // VirusTotal details
+            const vt = analysis.virustotal_results;
+            document.getElementById('vtDomain').textContent = vt.domain || 'N/A';
+            document.getElementById('vtMaliciousCount').textContent = vt.malicious || 0;
+            document.getElementById('vtHarmlessCount').textContent = vt.harmless || 0;
+            document.getElementById('vtReputation').textContent = vt.reputation || 0;
+
+            const vtBadge = document.getElementById('vtBadge');
+            if (vt.is_malicious) {
+                vtBadge.className = 'text-xs font-bold px-2 py-0.5 rounded bg-red-100 text-red-700';
+                vtBadge.textContent = 'Malicious Flagged';
+            } else {
+                vtBadge.className = 'text-xs font-bold px-2 py-0.5 rounded bg-emerald-100 text-emerald-700';
+                vtBadge.textContent = 'Clean / Unrated';
+            }
+
+            // Image details
+            document.getElementById('imageScoreBadge').textContent = analysis.module_scores.image.toFixed(2);
+            document.getElementById('extractedImgCount').textContent = analysis.image_details.extracted_count;
+            document.getElementById('logoImpersonation').textContent = analysis.image_details.logo_impersonation ? 'YES' : 'No';
+            const brands = analysis.image_details.brand_matches.map(b => b.brand).join(', ') || 'None';
+            document.getElementById('brandNameMatched').textContent = brands;
+
+            // Content details
+            document.getElementById('contentScoreBadge').textContent = analysis.module_scores.content.toFixed(2);
+            document.getElementById('mlProb').textContent = `${(analysis.content_details.ml_probability * 100).toFixed(1)}%`;
+            document.getElementById('urgencyScore').textContent = analysis.content_details.urgency_score.toFixed(2);
+            document.getElementById('linkMismatchCount').textContent = analysis.content_details.link_mismatches.length;
+
+            // Signals list
+            const signalsList = document.getElementById('signalsList');
+            signalsList.innerHTML = '';
+            if (analysis.contributing_signals.length === 0) {
+                signalsList.innerHTML = `<li class="text-emerald-700 bg-emerald-50 p-3 rounded-lg flex items-center"><i data-lucide="check-circle" class="w-4 h-4 mr-2"></i> No security risk indicators or anomaly flags detected.</li>`;
+            } else {
+                analysis.contributing_signals.forEach(sig => {
+                    const li = document.createElement('li');
+                    li.className = 'bg-slate-50 border border-slate-200 p-3 rounded-lg flex items-start text-slate-800';
+                    li.innerHTML = `<i data-lucide="alert-circle" class="w-4 h-4 mr-2 text-red-500 shrink-0 mt-0.5"></i><span>${sig}</span>`;
+                    signalsList.appendChild(li);
+                });
+            }
+
+            // JSON viewer
+            document.getElementById('jsonViewer').textContent = JSON.stringify(data, null, 2);
+
+            lucide.createIcons();
+        }
+
+        document.getElementById('jsonToggleHeader').addEventListener('click', () => {
+            const viewer = document.getElementById('jsonViewer');
+            viewer.classList.toggle('hidden');
+        });
+    </script>
+</body>
+</html>

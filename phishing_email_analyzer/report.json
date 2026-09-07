@@ -1,0 +1,363 @@
+{
+  "summary": {
+    "total_analyzed": 4,
+    "high_risk_count": 2,
+    "suspicious_count": 0,
+    "legitimate_count": 2,
+    "risk_threshold": 0.65
+  },
+  "emails": [
+    {
+      "file_path": "tests\\fixtures\\legitimate.eml",
+      "filename": "legitimate.eml",
+      "subject": "Weekly Sprint Planning & Status Report",
+      "sender": "Engineering Team <team@acme-corp.com>",
+      "date": "Mon, 07 Sep 2026 10:00:00 +0000",
+      "analysis": {
+        "overall_risk_score": 0.0613,
+        "verdict": "LEGITIMATE",
+        "confidence_score": 0.653,
+        "explanation": "Verified as LEGITIMATE: Email headers authenticated (SPF/DKIM pass), no logo impersonation, and content is clean.",
+        "risk_threshold": 0.65,
+        "weights": {
+          "header": 0.35,
+          "image": 0.25,
+          "content": 0.4
+        },
+        "module_scores": {
+          "header": 0.0,
+          "image": 0.0,
+          "content": 0.1534
+        },
+        "msticpy_analysis": {
+          "header_score": 0.0,
+          "metadata": {
+            "received_hops_count": 0,
+            "has_auth_results": true,
+            "auth_summary": "SPF:PASS|DKIM:PASS|DMARC:MISSING",
+            "header_prediction_score": 0.0,
+            "suspicion_level": "LOW"
+          }
+        },
+        "virustotal_results": {
+          "domain": "acme-corp.com",
+          "vt_available": false,
+          "malicious": 0,
+          "suspicious": 0,
+          "harmless": 80,
+          "reputation": 5,
+          "is_malicious": false,
+          "risk_score": 0.0,
+          "categories": [
+            "Legitimate Domain"
+          ],
+          "summary": "Heuristic fallback (Set VT_API_KEY in .env for live VirusTotal API threat intelligence lookups)."
+        },
+        "header_details": {
+          "spf_status": "PASS",
+          "dkim_status": "PASS",
+          "dmarc_status": "MISSING",
+          "from_domain": "acme-corp.com",
+          "reply_to_domain": "",
+          "domain_mismatch": false,
+          "lookalike_domain": false,
+          "originating_ip": null
+        },
+        "image_details": {
+          "extracted_count": 0,
+          "logo_impersonation": false,
+          "brand_matches": []
+        },
+        "content_details": {
+          "ml_probability": 0.3408,
+          "urgency_score": 0.0,
+          "urgency_phrases": [],
+          "link_mismatches": []
+        },
+        "contributing_signals": []
+      }
+    },
+    {
+      "file_path": "tests\\fixtures\\phishing.eml",
+      "filename": "phishing.eml",
+      "subject": "URGENT: Your PayPal Account Has Been Suspended",
+      "sender": "PayPal Security <security-update@paypa1-verify.com>",
+      "date": "Mon, 07 Sep 2026 11:30:00 +0000",
+      "analysis": {
+        "overall_risk_score": 0.9415,
+        "verdict": "HIGH_RISK_PHISHING",
+        "confidence_score": 0.8599,
+        "explanation": "Flagged as HIGH RISK PHISHING due to: VirusTotal flagged sender domain 'paypa1-verify.com' as malicious. MSTICPy header analysis detected SPF/DKIM authentication failures or lookalike domain 'paypa1-verify.com'. Perceptual image analysis detected unauthorized 'PAYPAL' logo impersonation. Mismatched link text showing 'paypal.com' pointing to actual URL domain 'evil-phish.net'. Coercive urgency language detected ('urgent, immediately, immediate action required'). NLP ML model predicted high phishing language probability (70.7%).",
+        "risk_threshold": 0.65,
+        "weights": {
+          "header": 0.35,
+          "image": 0.25,
+          "content": 0.4
+        },
+        "module_scores": {
+          "header": 0.94,
+          "image": 0.85,
+          "content": 1.0
+        },
+        "msticpy_analysis": {
+          "header_score": 1.0,
+          "metadata": {
+            "received_hops_count": 0,
+            "has_auth_results": true,
+            "auth_summary": "SPF:FAIL|DKIM:FAIL|DMARC:FAIL",
+            "header_prediction_score": 1.0,
+            "suspicion_level": "HIGH"
+          }
+        },
+        "virustotal_results": {
+          "domain": "paypa1-verify.com",
+          "vt_available": false,
+          "malicious": 3,
+          "suspicious": 1,
+          "harmless": 10,
+          "reputation": -15,
+          "is_malicious": true,
+          "risk_score": 0.85,
+          "categories": [
+            "Phishing / Lookalike"
+          ],
+          "summary": "Heuristic fallback (Set VT_API_KEY in .env for live VirusTotal API threat intelligence lookups)."
+        },
+        "header_details": {
+          "spf_status": "FAIL",
+          "dkim_status": "FAIL",
+          "dmarc_status": "FAIL",
+          "from_domain": "paypa1-verify.com",
+          "reply_to_domain": "evil-attacker.net",
+          "domain_mismatch": true,
+          "lookalike_domain": true,
+          "originating_ip": null
+        },
+        "image_details": {
+          "extracted_count": 1,
+          "logo_impersonation": true,
+          "brand_matches": [
+            {
+              "brand": "paypal",
+              "hamming_distance": 0,
+              "domain_authorized": false
+            }
+          ]
+        },
+        "content_details": {
+          "ml_probability": 0.7073,
+          "urgency_score": 1.0,
+          "urgency_phrases": [
+            "urgent",
+            "immediately",
+            "immediate action required",
+            "within 24 hours",
+            "account suspended",
+            "unauthorized login",
+            "verify your account",
+            "click below"
+          ],
+          "link_mismatches": [
+            {
+              "href": "http://evil-phish.net/login-harvest",
+              "displayed_text": "https://www.paypal.com/cgi-bin/webscr-verify",
+              "displayed_domain": "paypal.com",
+              "actual_domain": "evil-phish.net",
+              "severity": "HIGH"
+            }
+          ]
+        },
+        "contributing_signals": [
+          "SPF verification failed",
+          "DKIM verification failed",
+          "DMARC policy failed",
+          "From domain (paypa1-verify.com) mismatches Reply-To domain (evil-attacker.net)",
+          "From domain (paypa1-verify.com) mismatches Return-Path domain (different-domain.org)",
+          "From domain (paypa1-verify.com) matches known lookalike/typosquatting pattern",
+          "VirusTotal Threat Intel: Sender domain (paypa1-verify.com) flagged malicious/suspicious (Heuristic fallback (Set VT_API_KEY in .env for live VirusTotal API threat intelligence lookups).)",
+          "Detected impersonated 'paypal' logo in email from unauthorized domain 'paypa1-verify.com' (Hamming Dist: 0)",
+          "Detected 5 urgency/pressure categories: account_status_threat, coercive_call_to_action, credential_harvest_prompt, high_urgency_timeframe, security_alert_pressure",
+          "High risk pressure tactic: Threat of account suspension or termination",
+          "NLP ML Classifier detected phishing language (Probability: 70.73%)",
+          "Mismatched Hyperlink: Displayed text domain 'paypal.com' leads to actual destination 'evil-phish.net'"
+        ]
+      }
+    },
+    {
+      "file_path": "tests\\fixtures\\legitimate.eml",
+      "filename": "legitimate.eml",
+      "subject": "Weekly Sprint Planning & Status Report",
+      "sender": "Engineering Team <team@acme-corp.com>",
+      "date": "Mon, 07 Sep 2026 10:00:00 +0000",
+      "analysis": {
+        "overall_risk_score": 0.0613,
+        "verdict": "LEGITIMATE",
+        "confidence_score": 0.653,
+        "explanation": "Verified as LEGITIMATE: Email headers authenticated (SPF/DKIM pass), no logo impersonation, and content is clean.",
+        "risk_threshold": 0.65,
+        "weights": {
+          "header": 0.35,
+          "image": 0.25,
+          "content": 0.4
+        },
+        "module_scores": {
+          "header": 0.0,
+          "image": 0.0,
+          "content": 0.1534
+        },
+        "msticpy_analysis": {
+          "header_score": 0.0,
+          "metadata": {
+            "received_hops_count": 0,
+            "has_auth_results": true,
+            "auth_summary": "SPF:PASS|DKIM:PASS|DMARC:MISSING",
+            "header_prediction_score": 0.0,
+            "suspicion_level": "LOW"
+          }
+        },
+        "virustotal_results": {
+          "domain": "acme-corp.com",
+          "vt_available": false,
+          "malicious": 0,
+          "suspicious": 0,
+          "harmless": 80,
+          "reputation": 5,
+          "is_malicious": false,
+          "risk_score": 0.0,
+          "categories": [
+            "Legitimate Domain"
+          ],
+          "summary": "Heuristic fallback (Set VT_API_KEY in .env for live VirusTotal API threat intelligence lookups)."
+        },
+        "header_details": {
+          "spf_status": "PASS",
+          "dkim_status": "PASS",
+          "dmarc_status": "MISSING",
+          "from_domain": "acme-corp.com",
+          "reply_to_domain": "",
+          "domain_mismatch": false,
+          "lookalike_domain": false,
+          "originating_ip": null
+        },
+        "image_details": {
+          "extracted_count": 0,
+          "logo_impersonation": false,
+          "brand_matches": []
+        },
+        "content_details": {
+          "ml_probability": 0.3408,
+          "urgency_score": 0.0,
+          "urgency_phrases": [],
+          "link_mismatches": []
+        },
+        "contributing_signals": []
+      }
+    },
+    {
+      "file_path": "tests\\fixtures\\phishing.eml",
+      "filename": "phishing.eml",
+      "subject": "URGENT: Your PayPal Account Has Been Suspended",
+      "sender": "PayPal Security <security-update@paypa1-verify.com>",
+      "date": "Mon, 07 Sep 2026 11:30:00 +0000",
+      "analysis": {
+        "overall_risk_score": 0.9415,
+        "verdict": "HIGH_RISK_PHISHING",
+        "confidence_score": 0.8599,
+        "explanation": "Flagged as HIGH RISK PHISHING due to: VirusTotal flagged sender domain 'paypa1-verify.com' as malicious. MSTICPy header analysis detected SPF/DKIM authentication failures or lookalike domain 'paypa1-verify.com'. Perceptual image analysis detected unauthorized 'PAYPAL' logo impersonation. Mismatched link text showing 'paypal.com' pointing to actual URL domain 'evil-phish.net'. Coercive urgency language detected ('urgent, immediately, immediate action required'). NLP ML model predicted high phishing language probability (70.7%).",
+        "risk_threshold": 0.65,
+        "weights": {
+          "header": 0.35,
+          "image": 0.25,
+          "content": 0.4
+        },
+        "module_scores": {
+          "header": 0.94,
+          "image": 0.85,
+          "content": 1.0
+        },
+        "msticpy_analysis": {
+          "header_score": 1.0,
+          "metadata": {
+            "received_hops_count": 0,
+            "has_auth_results": true,
+            "auth_summary": "SPF:FAIL|DKIM:FAIL|DMARC:FAIL",
+            "header_prediction_score": 1.0,
+            "suspicion_level": "HIGH"
+          }
+        },
+        "virustotal_results": {
+          "domain": "paypa1-verify.com",
+          "vt_available": false,
+          "malicious": 3,
+          "suspicious": 1,
+          "harmless": 10,
+          "reputation": -15,
+          "is_malicious": true,
+          "risk_score": 0.85,
+          "categories": [
+            "Phishing / Lookalike"
+          ],
+          "summary": "Heuristic fallback (Set VT_API_KEY in .env for live VirusTotal API threat intelligence lookups)."
+        },
+        "header_details": {
+          "spf_status": "FAIL",
+          "dkim_status": "FAIL",
+          "dmarc_status": "FAIL",
+          "from_domain": "paypa1-verify.com",
+          "reply_to_domain": "evil-attacker.net",
+          "domain_mismatch": true,
+          "lookalike_domain": true,
+          "originating_ip": null
+        },
+        "image_details": {
+          "extracted_count": 1,
+          "logo_impersonation": true,
+          "brand_matches": [
+            {
+              "brand": "paypal",
+              "hamming_distance": 0,
+              "domain_authorized": false
+            }
+          ]
+        },
+        "content_details": {
+          "ml_probability": 0.7073,
+          "urgency_score": 1.0,
+          "urgency_phrases": [
+            "urgent",
+            "immediately",
+            "immediate action required",
+            "within 24 hours",
+            "account suspended",
+            "unauthorized login",
+            "verify your account",
+            "click below"
+          ],
+          "link_mismatches": [
+            {
+              "href": "http://evil-phish.net/login-harvest",
+              "displayed_text": "https://www.paypal.com/cgi-bin/webscr-verify",
+              "displayed_domain": "paypal.com",
+              "actual_domain": "evil-phish.net",
+              "severity": "HIGH"
+            }
+          ]
+        },
+        "contributing_signals": [
+          "SPF verification failed",
+          "DKIM verification failed",
+          "DMARC policy failed",
+          "From domain (paypa1-verify.com) mismatches Reply-To domain (evil-attacker.net)",
+          "From domain (paypa1-verify.com) mismatches Return-Path domain (different-domain.org)",
+          "From domain (paypa1-verify.com) matches known lookalike/typosquatting pattern",
+          "VirusTotal Threat Intel: Sender domain (paypa1-verify.com) flagged malicious/suspicious (Heuristic fallback (Set VT_API_KEY in .env for live VirusTotal API threat intelligence lookups).)",
+          "Detected impersonated 'paypal' logo in email from unauthorized domain 'paypa1-verify.com' (Hamming Dist: 0)",
+          "Detected 5 urgency/pressure categories: account_status_threat, coercive_call_to_action, credential_harvest_prompt, high_urgency_timeframe, security_alert_pressure",
+          "High risk pressure tactic: Threat of account suspension or termination",
+          "NLP ML Classifier detected phishing language (Probability: 70.73%)",
+          "Mismatched Hyperlink: Displayed text domain 'paypal.com' leads to actual destination 'evil-phish.net'"
+        ]
+      }
+    }
+  ]
+}

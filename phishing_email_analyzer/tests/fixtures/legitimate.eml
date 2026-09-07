@@ -1,0 +1,20 @@
+From: "Engineering Team" <team@acme-corp.com>
+To: "Rahul Wagh" <rahul@example.com>
+Subject: Weekly Sprint Planning & Status Report
+Date: Mon, 07 Sep 2026 10:00:00 +0000
+Message-ID: <123456789@acme-corp.com>
+Authentication-Results: mx.google.com; dkim=pass; spf=pass (google.com: domain of team@acme-corp.com designates 192.0.2.1 as permitted sender)
+Received-SPF: pass (google.com: domain of team@acme-corp.com designates 192.0.2.1 as permitted sender)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=acme-corp.com
+Content-Type: text/html; charset="utf-8"
+
+<!DOCTYPE html>
+<html>
+<body>
+    <h2>Sprint Status Summary</h2>
+    <p>Hi Rahul,</p>
+    <p>Please review the weekly sprint status report for our upcoming feature releases.</p>
+    <p>You can access the project roadmap on our internal portal here: <a href="https://acme-corp.com/roadmap">https://acme-corp.com/roadmap</a></p>
+    <p>Best regards,<br>Engineering Lead</p>
+</body>
+</html>
