@@ -211,6 +211,21 @@
                     </div>
                 </div>
 
+                <!-- Unit IV: Multinomial Language Model Card -->
+                <div class="bg-white rounded-xl border border-indigo-200 p-5 shadow-sm space-y-3">
+                    <div class="flex justify-between items-center border-b border-slate-100 pb-2">
+                        <span class="text-xs font-bold uppercase text-slate-500 tracking-wider flex items-center">
+                            <i data-lucide="languages" class="w-4 h-4 mr-1.5 text-indigo-600"></i> Unit IV • Language Model
+                        </span>
+                        <span id="languageModelScore" class="text-xs font-bold px-2 py-0.5 rounded bg-indigo-100 text-indigo-700">0.50</span>
+                    </div>
+                    <div class="space-y-2 text-xs">
+                        <div class="flex justify-between"><span class="text-slate-500">Model:</span><span class="font-semibold">Unigram Multinomial</span></div>
+                        <div class="flex justify-between"><span class="text-slate-500">Phishing Language:</span><span id="phishingLanguageScore" class="font-semibold">50%</span></div>
+                        <div class="flex justify-between gap-4"><span class="text-slate-500">Top Terms:</span><span id="topPhishingTerms" class="font-semibold text-right">None</span></div>
+                    </div>
+                </div>
+
                 <!-- Contributing Security Signals Detail Box -->
                 <div class="bg-white rounded-xl border border-slate-200 p-6 shadow-sm">
                     <h3 class="text-sm font-semibold text-slate-900 uppercase tracking-wider mb-4 flex items-center">
@@ -407,6 +422,14 @@
             document.getElementById('mlProb').textContent = `${(analysis.content_details.ml_probability * 100).toFixed(1)}%`;
             document.getElementById('urgencyScore').textContent = analysis.content_details.urgency_score.toFixed(2);
             document.getElementById('linkMismatchCount').textContent = analysis.content_details.link_mismatches.length;
+
+            // Unit IV: Multinomial Language Model
+            const lm = analysis.content_details.language_model || {};
+            const lmScore = Number(lm.phishing_language_score || 0);
+            document.getElementById('languageModelScore').textContent = lmScore.toFixed(2);
+            document.getElementById('phishingLanguageScore').textContent = `${(lmScore * 100).toFixed(1)}%`;
+            const topTerms = (lm.top_phishing_terms || []).map(item => item.word).join(', ') || 'None';
+            document.getElementById('topPhishingTerms').textContent = topTerms;
 
             // Signals list
             const signalsList = document.getElementById('signalsList');

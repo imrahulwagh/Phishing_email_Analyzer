@@ -6,6 +6,7 @@ from pathlib import Path
 from ingestion.eml_parser import ParsedEmail
 from .text_cleaner import clean_text, check_link_mismatches
 from .urgency_detector import UrgencyDetector
+from .language_model import MultinomialLanguageModel
 
 
 @dataclass
@@ -16,6 +17,7 @@ class NLPAnalysisResult:
     link_mismatches: List[Dict[str, Any]]
     urgency_phrases: List[str]
     combined_content_risk_score: float
+    language_model_result: Dict[str, Any]
     flags: List[str] = field(default_factory=list)
 
 
@@ -26,6 +28,7 @@ class ContentNLPClassifier:
         self.model_path = Path(model_path)
         self.pipeline = None
         self.urgency_detector = UrgencyDetector()
+        self.language_model = MultinomialLanguageModel()
         self._load_or_train_fallback()
 
     def _load_or_train_fallback(self):
@@ -56,6 +59,7 @@ class ContentNLPClassifier:
         full_text = (email_data.subject + " " + email_data.body_plain + " " + email_data.body_html).strip()
 
         ml_prob = self.predict_text(full_text)
+        language_model_result = self.language_model.analyze(full_text)
         urgency_res = self.urgency_detector.analyze(full_text)
         link_mismatches = check_link_mismatches(email_data.links)
 
@@ -82,5 +86,6 @@ class ContentNLPClassifier:
             link_mismatches=link_mismatches,
             urgency_phrases=urgency_res.detected_phrases,
             combined_content_risk_score=combined,
+            language_model_result=language_model_result,
             flags=flags
         )

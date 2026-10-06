@@ -63,7 +63,8 @@ class EmailRiskAssessment:
                 "ml_probability": round(self.content_result.ml_phishing_probability, 4),
                 "urgency_score": round(self.content_result.urgency_score, 4),
                 "urgency_phrases": self.content_result.urgency_phrases,
-                "link_mismatches": self.content_result.link_mismatches
+                "link_mismatches": self.content_result.link_mismatches,
+                "language_model": self.content_result.language_model_result
             },
             "contributing_signals": self.all_contributing_signals
         }
