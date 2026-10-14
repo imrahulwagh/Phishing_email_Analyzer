@@ -26,6 +26,11 @@ Includes a **CLI entry point**, **JSON report exporter**, **unit test suite**, a
    - **Link Mismatch Inspector**: Detects visual hyperlink text domain vs actual `href` destination mismatches (e.g., text displays `https://paypal.com` but link leads to `http://evil-phish.net`).
    - **Urgency Language Detector**: Identifies psychological pressure tactics, threats of account termination, and immediate call-to-action prompts.
    - **TF-IDF + Logistic Regression ML Classifier**: Predicts phishing probability based on textual content.
+   - **Multinomial Language Model**: Compares word patterns against the built-in phishing and legitimate example messages. Its score is informational and does not affect the overall risk score.
+
+### Information retrieval in this project
+
+This project does not implement a traditional document search engine that retrieves and ranks documents for a query. Its related IR/NLP techniques are feature extraction and comparison: TF-IDF represents words and short phrases numerically for the Logistic Regression text classifier, and a separate unigram multinomial language model compares word likelihoods in the two example-message sets. The analyzer also retrieves sender-domain reputation when a VirusTotal API key is configured and matches extracted email images against local reference-logo hashes. The built-in classifier uses only 10 example messages per class, so its text outputs are a demonstration rather than a dependable standalone phishing detector.
 
 4. **Weighted Scoring Engine (`/scoring`)**:
    - Combines normalized sub-scores:
